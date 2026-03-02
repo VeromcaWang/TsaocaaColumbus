@@ -1,0 +1,121 @@
+spring:
+  application:
+    name: tsaocaa-backend
+
+  profiles:
+    active: local
+
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss'Z'
+    time-zone: UTC
+    serialization:
+      write-dates-as-timestamps: false
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+logging:
+  level:
+    com.tsaocaacolumbus: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:h2:mem:tsaocaa;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    url: jdbc:h2:mem:tsaocaa;MODE=MySQL;DB_CLOSE_DELAY=-1
+    user: sa
+    password:
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # In local mode, use a permissive issuer for dev/testing
+          # Override with a test JWT issuer or disable security for local
+          issuer-uri: http://localhost:9999/local-auth
+
+app:
+  cognito:
+    user-pool-id: local-pool
+    client-id: local-client
+    region: us-east-2
+  s3:
+    bucket-name: local-bucket
+    region: us-east-2
+  sns:
+    topic-arn: arn:aws:sns:us-east-2:000000000000:local-topic
+
+---
+spring:
+  config:
+    activate:
+      on-profile: lambda
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 1
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.${app.cognito.region}.amazonaws.com/${app.cognito.user-pool-id}
+          jwk-set-uri: https://cognito-idp.${app.cognito.region}.amazonaws.com/${app.cognito.user-pool-id}/.well-known/jwks.json
+
+app:
+  cognito:
+    user-pool-id: ${COGNITO_USER_POOL_ID}
+    client-id: ${COGNITO_CLIENT_ID}
+    region: ${AWS_REGION_NAME:us-east-2}
+  s3:
+    bucket-name: ${S3_BUCKET_NAME}
+    region: ${AWS_REGION_NAME:us-east-2}
+  sns:
+    topic-arn: ${SNS_TOPIC_ARN}
