@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "expo-mobile",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "tsaocaa-mobile", "start"],
+      "port": 8081
+    },
+    {
+      "name": "vite-admin",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "tsaocaa-admin", "run", "dev"],
+      "port": 3001
+    },
+    {
+      "name": "spring-backend",
+      "runtimeExecutable": "mvn",
+      "runtimeArgs": ["-f", "tsaocaa-backend/pom.xml", "spring-boot:run", "-Dspring-boot.run.profiles=local"],
+      "port": 8080
+    }
+  ]
+}
