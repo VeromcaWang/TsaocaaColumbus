@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { Colors } from '../constants/colors';
+import { Feather } from '@expo/vector-icons';
+import { Colors, Typography } from '../constants/colors';
 
 interface StoreHighlightDetailProps {
   announcement: {
@@ -22,7 +23,7 @@ export default function StoreHighlightDetail({ announcement }: StoreHighlightDet
         />
       ) : (
         <View style={[styles.image, styles.imagePlaceholder]}>
-          <Text style={styles.placeholderEmoji}>📢</Text>
+          <Feather name="bell" size={64} color={Colors.textMuted} />
         </View>
       )}
       <View style={styles.content}>
@@ -48,21 +49,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  placeholderEmoji: {
-    fontSize: 64,
-  },
   content: {
     padding: 20,
   },
   title: {
     fontSize: 22,
-    fontWeight: '800',
-    color: Colors.primary,
+    fontWeight: '600',
+    color: Colors.textPrimary,
     marginBottom: 14,
+    fontFamily: Typography.semiBold,
   },
   body: {
     fontSize: 15,
     color: Colors.textSecondary,
     lineHeight: 24,
+    fontFamily: Typography.regular,
   },
 });

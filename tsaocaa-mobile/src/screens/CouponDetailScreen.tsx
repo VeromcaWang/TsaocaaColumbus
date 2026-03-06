@@ -3,9 +3,10 @@ import {
   View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, ScrollView,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import { Feather } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useCouponDetail, useRedeemCoupon } from '../api/hooks/useGame';
-import { Colors } from '../constants/colors';
+import { Colors, Typography } from '../constants/colors';
 
 export default function CouponDetailScreen() {
   const route = useRoute<any>();
@@ -18,7 +19,7 @@ export default function CouponDetailScreen() {
     if (coupon?.status !== 'ACTIVE') return;
 
     Alert.alert(
-      '🎫 Redeem Coupon',
+      'Redeem Coupon',
       `Show this screen to your barista and tap Redeem to use:\n\n${coupon.name}\n\nThis cannot be undone.`,
       [
         { text: 'Cancel', style: 'cancel' },
@@ -29,7 +30,7 @@ export default function CouponDetailScreen() {
             try {
               await redeemMutation.mutateAsync(couponId);
               refetch();
-              Alert.alert('✅ Redeemed!', 'Your coupon has been redeemed. Enjoy your drink!');
+              Alert.alert('Redeemed!', 'Your coupon has been redeemed. Enjoy your drink!');
             } catch {
               Alert.alert('Error', 'Could not redeem coupon. Please try again or ask staff for help.');
             }
@@ -49,7 +50,7 @@ export default function CouponDetailScreen() {
   if (isLoading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color={Colors.accent} />
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
@@ -69,7 +70,10 @@ export default function CouponDetailScreen() {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.backBtnText}>←  Back</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Feather name="arrow-left" size={18} color={Colors.primary} />
+            <Text style={styles.backBtnText}>Back</Text>
+          </View>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>My Coupon</Text>
       </View>
@@ -130,7 +134,7 @@ export default function CouponDetailScreen() {
         <View style={styles.instructionBox}>
           <Text style={styles.instructionText}>
             Show this screen to your barista and tap{' '}
-            <Text style={{ fontWeight: '700' }}>Redeem</Text> when ready.
+            <Text style={{ fontWeight: '600' }}>Redeem</Text> when ready.
           </Text>
         </View>
       )}
@@ -145,19 +149,19 @@ export default function CouponDetailScreen() {
           {redeemMutation.isPending ? (
             <ActivityIndicator color={Colors.textOnDark} />
           ) : (
-            <Text style={styles.redeemBtnText}>🎫 REDEEM COUPON</Text>
+            <Text style={styles.redeemBtnText}>REDEEM COUPON</Text>
           )}
         </TouchableOpacity>
       )}
 
       {isRedeemed && (
         <View style={styles.redeemedBox}>
-          <Text style={styles.redeemedText}>✅ This coupon was redeemed on {formatDate(coupon.redeemedAt)}</Text>
+          <Text style={styles.redeemedText}>This coupon was redeemed on {formatDate(coupon.redeemedAt)}</Text>
         </View>
       )}
 
       {isActive && (
-        <Text style={styles.warningText}>⚠️ This action cannot be undone</Text>
+        <Text style={styles.warningText}>This action cannot be undone</Text>
       )}
 
       <View style={{ height: 40 }} />
@@ -168,44 +172,59 @@ export default function CouponDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   loading: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.background },
-  errorText: { color: Colors.textMuted, fontSize: 16 },
+  errorText: { color: Colors.textMuted, fontSize: 16, fontFamily: Typography.regular },
   header: {
-    backgroundColor: Colors.primary, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16,
+    backgroundColor: Colors.background, paddingTop: 60, paddingBottom: 16, paddingHorizontal: 16,
     flexDirection: 'row', alignItems: 'center',
   },
   backBtn: { marginRight: 16 },
-  backBtnText: { color: Colors.accent, fontSize: 17, fontWeight: '700' },
-  headerTitle: { fontSize: 20, fontWeight: '800', color: Colors.textOnDark },
+  backBtnText: {
+    color: Colors.primary, fontSize: 17, fontWeight: '600',
+    fontFamily: Typography.semiBold,
+  },
+  headerTitle: {
+    fontSize: 20, fontWeight: '600', color: Colors.textPrimary,
+    fontFamily: Typography.semiBold,
+  },
   couponCard: {
-    margin: 16, backgroundColor: Colors.surface, borderRadius: 20, padding: 24,
-    alignItems: 'center', borderWidth: 1, borderColor: Colors.border,
+    margin: 16, backgroundColor: Colors.surface, borderRadius: 16, padding: 24,
+    alignItems: 'center',
     shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 10, shadowOffset: { width: 0, height: 4 },
     elevation: 4,
   },
   statusBadge: { borderRadius: 12, paddingHorizontal: 14, paddingVertical: 6, marginBottom: 16 },
-  statusBadgeText: { fontWeight: '700', fontSize: 14 },
+  statusBadgeText: { fontWeight: '600', fontSize: 14, fontFamily: Typography.semiBold },
   couponEmoji: { fontSize: 56, marginBottom: 8 },
-  couponName: { fontSize: 24, fontWeight: '800', color: Colors.primary, textAlign: 'center', marginBottom: 8 },
-  couponDescription: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 8 },
-  terms: { fontSize: 13, color: Colors.textMuted, marginBottom: 24 },
+  couponName: {
+    fontSize: 24, fontWeight: '600', color: Colors.textPrimary, textAlign: 'center', marginBottom: 8,
+    fontFamily: Typography.semiBold,
+  },
+  couponDescription: {
+    fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 8,
+    fontFamily: Typography.regular,
+  },
+  terms: { fontSize: 13, color: Colors.textMuted, marginBottom: 24, fontFamily: Typography.regular },
   qrContainer: { alignItems: 'center', padding: 20, backgroundColor: Colors.background, borderRadius: 16, marginBottom: 20, borderWidth: 1, borderColor: Colors.divider },
-  couponCode: { fontSize: 22, fontFamily: 'monospace', fontWeight: '700', color: Colors.primary, marginTop: 12, letterSpacing: 3 },
+  couponCode: { fontSize: 22, fontFamily: 'monospace', fontWeight: '600', color: Colors.textPrimary, marginTop: 12, letterSpacing: 3 },
   datesRow: { flexDirection: 'row', width: '100%' },
   dateItem: { flex: 1, alignItems: 'center' },
-  dateLabel: { fontSize: 12, color: Colors.textMuted, marginBottom: 4 },
-  dateValue: { fontSize: 14, fontWeight: '700', color: Colors.textPrimary },
+  dateLabel: { fontSize: 12, color: Colors.textMuted, marginBottom: 4, fontFamily: Typography.regular },
+  dateValue: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary, fontFamily: Typography.semiBold },
   dateDivider: { width: 1, backgroundColor: Colors.divider },
   instructionBox: { marginHorizontal: 16, marginBottom: 12, backgroundColor: Colors.surfaceWarm, borderRadius: 12, padding: 14 },
-  instructionText: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22 },
+  instructionText: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, fontFamily: Typography.regular },
   redeemBtn: {
-    marginHorizontal: 16, backgroundColor: Colors.accent, borderRadius: 14,
+    marginHorizontal: 16, backgroundColor: Colors.primary, borderRadius: 12,
     paddingVertical: 18, alignItems: 'center',
-    shadowColor: Colors.accent, shadowOpacity: 0.4, shadowRadius: 12, shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
+    shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
   },
   btnDisabled: { opacity: 0.6 },
-  redeemBtnText: { fontSize: 18, fontWeight: '900', color: Colors.textOnDark },
+  redeemBtnText: {
+    fontSize: 18, fontWeight: '600', color: Colors.textOnDark,
+    fontFamily: Typography.semiBold,
+  },
   redeemedBox: { marginHorizontal: 16, marginTop: 16, backgroundColor: Colors.success + '15', borderRadius: 12, padding: 16, alignItems: 'center' },
-  redeemedText: { fontSize: 15, color: Colors.success, fontWeight: '700', textAlign: 'center' },
-  warningText: { textAlign: 'center', fontSize: 13, color: Colors.textMuted, marginTop: 10 },
+  redeemedText: { fontSize: 15, color: Colors.success, fontWeight: '600', textAlign: 'center', fontFamily: Typography.semiBold },
+  warningText: { textAlign: 'center', fontSize: 13, color: Colors.textMuted, marginTop: 10, fontFamily: Typography.regular },
 });

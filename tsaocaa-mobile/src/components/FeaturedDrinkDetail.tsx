@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { Colors } from '../constants/colors';
+import { Feather } from '@expo/vector-icons';
+import { Colors, Typography } from '../constants/colors';
 
 interface FeaturedDrinkDetailProps {
   item: {
@@ -26,7 +27,7 @@ export default function FeaturedDrinkDetail({ item }: FeaturedDrinkDetailProps) 
         />
       ) : (
         <View style={[styles.image, styles.imagePlaceholder]}>
-          <Text style={styles.placeholderEmoji}>🧋</Text>
+          <Feather name="coffee" size={64} color={Colors.textMuted} />
         </View>
       )}
 
@@ -53,11 +54,14 @@ export default function FeaturedDrinkDetail({ item }: FeaturedDrinkDetailProps) 
         )}
 
         {item.calories != null && (
-          <Text style={styles.calories}>🔥 {item.calories} cal</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 20 }}>
+            <Feather name="zap" size={14} color={Colors.textMuted} />
+            <Text style={styles.calories}>{item.calories} cal</Text>
+          </View>
         )}
 
         <View style={styles.ctaBox}>
-          <Text style={styles.ctaEmoji}>📍</Text>
+          <Feather name="map-pin" size={20} color={Colors.textOnDark} style={{ marginRight: 10, marginTop: 2 }} />
           <Text style={styles.ctaText}>
             Visit us at 4740 Reed Rd, Suite 107, Columbus, OH to order your drink!
           </Text>
@@ -80,9 +84,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  placeholderEmoji: {
-    fontSize: 64,
-  },
   content: {
     padding: 20,
   },
@@ -94,15 +95,17 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 22,
-    fontWeight: '800',
-    color: Colors.primary,
+    fontWeight: '600',
+    color: Colors.textPrimary,
     flex: 1,
     marginRight: 12,
+    fontFamily: Typography.semiBold,
   },
   price: {
     fontSize: 22,
-    fontWeight: '800',
-    color: Colors.accent,
+    fontWeight: '600',
+    color: Colors.primary,
+    fontFamily: Typography.semiBold,
   },
   tagsRow: {
     flexDirection: 'row',
@@ -119,35 +122,34 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 13,
     color: Colors.textSecondary,
-    fontWeight: '600',
+    fontWeight: '500',
+    fontFamily: Typography.medium,
   },
   description: {
     fontSize: 15,
     color: Colors.textSecondary,
     lineHeight: 24,
     marginBottom: 12,
+    fontFamily: Typography.regular,
   },
   calories: {
     fontSize: 14,
     color: Colors.textMuted,
-    marginBottom: 20,
+    fontFamily: Typography.regular,
   },
   ctaBox: {
     flexDirection: 'row',
     backgroundColor: Colors.primary,
-    borderRadius: 14,
+    borderRadius: 12,
     padding: 16,
     alignItems: 'flex-start',
-  },
-  ctaEmoji: {
-    fontSize: 24,
-    marginRight: 10,
   },
   ctaText: {
     flex: 1,
     fontSize: 14,
     color: Colors.textOnDark,
     lineHeight: 22,
-    opacity: 0.9,
+    opacity: 0.85,
+    fontFamily: Typography.regular,
   },
 });

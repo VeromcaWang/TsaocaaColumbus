@@ -3,10 +3,11 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, Alert, ActivityIndicator, ScrollView,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { CognitoUserPool, CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import { apiClient } from '../api/client';
-import { Colors } from '../constants/colors';
+import { Colors, Typography, Shadows } from '../constants/colors';
 
 const USER_POOL_ID = process.env.EXPO_PUBLIC_COGNITO_POOL_ID || 'us-east-2_XXXXXXXXX';
 const CLIENT_ID = process.env.EXPO_PUBLIC_COGNITO_CLIENT_ID || 'XXXXXXXXXXXXXXXXXXXXXXXXXX';
@@ -78,7 +79,7 @@ export default function SignUpScreen() {
       // Registration complete — navigate to login
       setIsLoading(false);
       Alert.alert(
-        '🎉 Account Created!',
+        'Account Created!',
         'Your account is ready. Please log in.',
         [{ text: 'Log In', onPress: () => navigation.navigate('Login') }]
       );
@@ -126,7 +127,7 @@ export default function SignUpScreen() {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
       <ScrollView contentContainerStyle={styles.inner} keyboardShouldPersistTaps="handled">
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.backBtnText}>←</Text>
+          <Feather name="arrow-left" size={22} color={Colors.primary} />
         </TouchableOpacity>
 
         <Text style={styles.logo}>朝茶</Text>
@@ -179,7 +180,7 @@ export default function SignUpScreen() {
             onPress={() => navigation.navigate('Login')}
           >
             <Text style={styles.loginLinkText}>
-              Already have an account? <Text style={{ color: Colors.accent }}>Log in</Text>
+              Already have an account? <Text style={{ color: Colors.primary }}>Log in</Text>
             </Text>
           </TouchableOpacity>
         </View>
@@ -189,27 +190,41 @@ export default function SignUpScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.primary },
+  container: { flex: 1, backgroundColor: Colors.background },
   inner: { flexGrow: 1, padding: 24, paddingTop: 60 },
   backBtn: { marginBottom: 20 },
-  backBtnText: { color: Colors.accent, fontSize: 24, fontWeight: '700' },
-  logo: { fontSize: 56, color: Colors.accentLight, letterSpacing: 8, textAlign: 'center', marginBottom: 4 },
-  title: { fontSize: 28, fontWeight: '800', color: Colors.textOnDark, textAlign: 'center', marginBottom: 6 },
-  subtitle: { fontSize: 15, color: Colors.textMuted, textAlign: 'center', marginBottom: 36, lineHeight: 22 },
-  form: { backgroundColor: Colors.surface, borderRadius: 20, padding: 20 },
-  label: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary, marginBottom: 6, marginTop: 12 },
-  input: {
-    borderWidth: 1, borderColor: Colors.border, borderRadius: 10,
-    paddingHorizontal: 14, paddingVertical: 12, fontSize: 16, color: Colors.textPrimary,
-    backgroundColor: Colors.background,
+  logo: { fontSize: 56, color: Colors.primary, letterSpacing: 10, textAlign: 'center', marginBottom: 4 },
+  title: {
+    fontSize: 28, fontWeight: '600', color: Colors.textPrimary, textAlign: 'center', marginBottom: 6,
+    fontFamily: Typography.semiBold,
   },
-  codeInput: { textAlign: 'center', fontSize: 28, letterSpacing: 8, fontWeight: '700' },
+  subtitle: {
+    fontSize: 15, color: Colors.textSecondary, textAlign: 'center', marginBottom: 36, lineHeight: 22,
+    fontFamily: Typography.regular,
+  },
+  form: {
+    backgroundColor: Colors.surface, borderRadius: 16, padding: 20,
+    ...Shadows.cardElevated,
+  },
+  label: {
+    fontSize: 14, fontWeight: '500', color: Colors.textPrimary, marginBottom: 6, marginTop: 12,
+    fontFamily: Typography.medium,
+  },
+  input: {
+    borderWidth: 1, borderColor: Colors.border, borderRadius: 12,
+    paddingHorizontal: 14, paddingVertical: 12, fontSize: 16, color: Colors.textPrimary,
+    backgroundColor: Colors.background, fontFamily: Typography.regular,
+  },
+  codeInput: { textAlign: 'center', fontSize: 28, letterSpacing: 8, fontWeight: '600' },
   signupBtn: {
-    backgroundColor: Colors.accent, borderRadius: 12, paddingVertical: 16,
+    backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 16,
     alignItems: 'center', marginTop: 24, marginBottom: 12,
   },
   btnDisabled: { opacity: 0.6 },
-  signupBtnText: { color: Colors.textOnDark, fontWeight: '800', fontSize: 17 },
+  signupBtnText: {
+    color: Colors.textOnDark, fontWeight: '600', fontSize: 17,
+    fontFamily: Typography.semiBold,
+  },
   loginLink: { alignItems: 'center', paddingVertical: 8 },
-  loginLinkText: { fontSize: 15, color: Colors.textSecondary },
+  loginLinkText: { fontSize: 15, color: Colors.textSecondary, fontFamily: Typography.regular },
 });

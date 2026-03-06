@@ -3,8 +3,9 @@ import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking, Platform,
   ActivityIndicator,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useStoreInfo } from '../api/hooks/useStore';
-import { Colors } from '../constants/colors';
+import { Colors, Typography } from '../constants/colors';
 
 const DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -24,7 +25,7 @@ export default function StoreScreen() {
   if (isLoading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color={Colors.accent} />
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
@@ -43,10 +44,13 @@ export default function StoreScreen() {
 
       {/* Map placeholder */}
       <View style={styles.mapPlaceholder}>
-        <Text style={styles.mapEmoji}>🗺️</Text>
+        <Feather name="map" size={40} color={Colors.textMuted} />
         <Text style={styles.mapText}>4740 Reed Rd, Suite 107{'\n'}Columbus, OH 43220</Text>
         <TouchableOpacity style={styles.directionsBtn} onPress={openDirections}>
-          <Text style={styles.directionsBtnText}>📍 Get Directions</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Feather name="navigation" size={16} color={Colors.textOnDark} />
+            <Text style={styles.directionsBtnText}>Get Directions</Text>
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -54,16 +58,16 @@ export default function StoreScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Contact</Text>
         <TouchableOpacity style={styles.contactRow} onPress={callStore}>
-          <Text style={styles.contactEmoji}>📞</Text>
-          <Text style={[styles.contactValue, { color: Colors.accent }]}>{store?.phone}</Text>
+          <Feather name="phone" size={20} color={Colors.primary} style={{ marginRight: 14 }} />
+          <Text style={[styles.contactValue, { color: Colors.primary }]}>{store?.phone}</Text>
         </TouchableOpacity>
         {store?.instagramUrl && (
           <TouchableOpacity
             style={styles.contactRow}
             onPress={() => Linking.openURL(store.instagramUrl)}
           >
-            <Text style={styles.contactEmoji}>📸</Text>
-            <Text style={[styles.contactValue, { color: Colors.accent }]}>@tsaocaacolumbus</Text>
+            <Feather name="instagram" size={20} color={Colors.primary} style={{ marginRight: 14 }} />
+            <Text style={[styles.contactValue, { color: Colors.primary }]}>@tsaocaacolumbus</Text>
           </TouchableOpacity>
         )}
         {store?.tiktokUrl && (
@@ -71,8 +75,8 @@ export default function StoreScreen() {
             style={styles.contactRow}
             onPress={() => Linking.openURL(store.tiktokUrl)}
           >
-            <Text style={styles.contactEmoji}>🎵</Text>
-            <Text style={[styles.contactValue, { color: Colors.accent }]}>@tsaocaacolumbus</Text>
+            <Feather name="music" size={20} color={Colors.primary} style={{ marginRight: 14 }} />
+            <Text style={[styles.contactValue, { color: Colors.primary }]}>@tsaocaacolumbus</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -113,37 +117,59 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   header: {
-    backgroundColor: Colors.primary, paddingTop: 56, paddingBottom: 20, paddingHorizontal: 16,
+    backgroundColor: Colors.background, paddingTop: 60, paddingBottom: 20, paddingHorizontal: 16,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.textOnDark },
+  headerTitle: {
+    fontSize: 26, fontWeight: '600', color: Colors.textPrimary,
+    fontFamily: Typography.semiBold,
+  },
   statusBadge: { borderRadius: 12, paddingHorizontal: 12, paddingVertical: 5 },
-  statusText: { color: '#fff', fontWeight: '700', fontSize: 13 },
+  statusText: {
+    color: Colors.textOnDark, fontWeight: '600', fontSize: 13,
+    fontFamily: Typography.semiBold,
+  },
   mapPlaceholder: {
     height: 200, backgroundColor: Colors.surfaceWarm, justifyContent: 'center',
     alignItems: 'center', borderBottomWidth: 1, borderBottomColor: Colors.border,
   },
-  mapEmoji: { fontSize: 48 },
-  mapText: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', marginTop: 8, lineHeight: 22 },
-  directionsBtn: {
-    backgroundColor: Colors.accent, borderRadius: 12, paddingHorizontal: 20, paddingVertical: 10, marginTop: 14,
+  mapText: {
+    fontSize: 15, color: Colors.textSecondary, textAlign: 'center', marginTop: 8, lineHeight: 22,
+    fontFamily: Typography.regular,
   },
-  directionsBtnText: { color: Colors.textOnDark, fontWeight: '700', fontSize: 15 },
+  directionsBtn: {
+    backgroundColor: Colors.primary, borderRadius: 12, paddingHorizontal: 20, paddingVertical: 10, marginTop: 14,
+  },
+  directionsBtnText: {
+    color: Colors.textOnDark, fontWeight: '600', fontSize: 15,
+    fontFamily: Typography.semiBold,
+  },
   section: { margin: 16 },
-  sectionTitle: { fontSize: 20, fontWeight: '800', color: Colors.primary, marginBottom: 12 },
+  sectionTitle: {
+    fontSize: 20, fontWeight: '600', color: Colors.textPrimary, marginBottom: 12,
+    fontFamily: Typography.semiBold, letterSpacing: 0.5,
+  },
   contactRow: {
     flexDirection: 'row', alignItems: 'center', paddingVertical: 12,
     borderBottomWidth: 1, borderBottomColor: Colors.divider,
   },
-  contactEmoji: { fontSize: 22, marginRight: 14 },
-  contactValue: { fontSize: 16, fontWeight: '600' },
+  contactValue: {
+    fontSize: 16, fontWeight: '500',
+    fontFamily: Typography.medium,
+  },
   hoursRow: {
     flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10,
     borderBottomWidth: 1, borderBottomColor: Colors.divider,
   },
   hoursRowToday: { backgroundColor: Colors.accentLight + '30', borderRadius: 8, paddingHorizontal: 8 },
-  hoursDay: { fontSize: 15, color: Colors.textSecondary },
-  hoursDayToday: { fontWeight: '700', color: Colors.primary },
-  hoursTime: { fontSize: 15, color: Colors.textMuted },
-  hoursTimeToday: { fontWeight: '700', color: Colors.accent },
+  hoursDay: {
+    fontSize: 15, color: Colors.textSecondary,
+    fontFamily: Typography.regular,
+  },
+  hoursDayToday: { fontWeight: '600', color: Colors.textPrimary, fontFamily: Typography.semiBold },
+  hoursTime: {
+    fontSize: 15, color: Colors.textMuted,
+    fontFamily: Typography.regular,
+  },
+  hoursTimeToday: { fontWeight: '600', color: Colors.primary, fontFamily: Typography.semiBold },
 });

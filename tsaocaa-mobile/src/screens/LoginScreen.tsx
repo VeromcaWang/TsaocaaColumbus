@@ -3,6 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, Alert, ActivityIndicator, ScrollView,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {
   CognitoUserPool,
@@ -11,7 +12,7 @@ import {
 } from 'amazon-cognito-identity-js';
 import { useAuthStore } from '../store/authStore';
 import { apiClient } from '../api/client';
-import { Colors } from '../constants/colors';
+import { Colors, Typography, Shadows } from '../constants/colors';
 
 // Replace with your actual Cognito pool and client IDs from SAM deploy outputs
 const USER_POOL_ID = process.env.EXPO_PUBLIC_COGNITO_POOL_ID || 'us-east-2_XXXXXXXXX';
@@ -88,7 +89,7 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.inner} keyboardShouldPersistTaps="handled">
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.backBtnText}>←</Text>
+          <Feather name="arrow-left" size={22} color={Colors.primary} />
         </TouchableOpacity>
 
         <Text style={styles.logo}>朝茶</Text>
@@ -135,7 +136,7 @@ export default function LoginScreen() {
             onPress={() => navigation.navigate('SignUp')}
           >
             <Text style={styles.createLinkText}>
-              Don't have an account? <Text style={{ color: Colors.accent }}>Sign up</Text>
+              Don't have an account? <Text style={{ color: Colors.primary }}>Sign up</Text>
             </Text>
           </TouchableOpacity>
         </View>
@@ -145,26 +146,40 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.primary },
+  container: { flex: 1, backgroundColor: Colors.background },
   inner: { flexGrow: 1, padding: 24, paddingTop: 60 },
   backBtn: { marginBottom: 20 },
-  backBtnText: { color: Colors.accent, fontSize: 24, fontWeight: '700' },
-  logo: { fontSize: 56, color: Colors.accentLight, letterSpacing: 8, textAlign: 'center', marginBottom: 4 },
-  title: { fontSize: 28, fontWeight: '800', color: Colors.textOnDark, textAlign: 'center', marginBottom: 6 },
-  subtitle: { fontSize: 15, color: Colors.textMuted, textAlign: 'center', marginBottom: 36 },
-  form: { backgroundColor: Colors.surface, borderRadius: 20, padding: 20 },
-  label: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary, marginBottom: 6, marginTop: 12 },
+  logo: { fontSize: 56, color: Colors.primary, letterSpacing: 10, textAlign: 'center', marginBottom: 4 },
+  title: {
+    fontSize: 28, fontWeight: '600', color: Colors.textPrimary, textAlign: 'center', marginBottom: 6,
+    fontFamily: Typography.semiBold,
+  },
+  subtitle: {
+    fontSize: 15, color: Colors.textSecondary, textAlign: 'center', marginBottom: 36,
+    fontFamily: Typography.regular,
+  },
+  form: {
+    backgroundColor: Colors.surface, borderRadius: 16, padding: 20,
+    ...Shadows.cardElevated,
+  },
+  label: {
+    fontSize: 14, fontWeight: '500', color: Colors.textPrimary, marginBottom: 6, marginTop: 12,
+    fontFamily: Typography.medium,
+  },
   input: {
-    borderWidth: 1, borderColor: Colors.border, borderRadius: 10,
+    borderWidth: 1, borderColor: Colors.border, borderRadius: 12,
     paddingHorizontal: 14, paddingVertical: 12, fontSize: 16, color: Colors.textPrimary,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.background, fontFamily: Typography.regular,
   },
   loginBtn: {
-    backgroundColor: Colors.accent, borderRadius: 12, paddingVertical: 16,
+    backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 16,
     alignItems: 'center', marginTop: 24, marginBottom: 12,
   },
   btnDisabled: { opacity: 0.6 },
-  loginBtnText: { color: Colors.textOnDark, fontWeight: '800', fontSize: 17 },
+  loginBtnText: {
+    color: Colors.textOnDark, fontWeight: '600', fontSize: 17,
+    fontFamily: Typography.semiBold,
+  },
   createLink: { alignItems: 'center', paddingVertical: 8 },
-  createLinkText: { fontSize: 15, color: Colors.textSecondary },
+  createLinkText: { fontSize: 15, color: Colors.textSecondary, fontFamily: Typography.regular },
 });

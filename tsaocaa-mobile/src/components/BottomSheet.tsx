@@ -98,8 +98,9 @@ const styles = StyleSheet.create({
   },
   closeBtnText: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '500',
     color: Colors.textSecondary,
+    fontFamily: 'Inter_500Medium',
   },
   content: {
     flex: 1,
