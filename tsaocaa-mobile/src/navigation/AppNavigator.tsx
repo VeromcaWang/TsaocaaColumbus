@@ -2,8 +2,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, Platform } from 'react-native';
-import { Colors } from '../constants/colors';
+import { Platform } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { Colors, Typography } from '../constants/colors';
 
 // Screens
 import HomeScreen from '../screens/HomeScreen';
@@ -49,12 +50,12 @@ function ProfileStackNavigator() {
   );
 }
 
-const TAB_ICONS: Record<string, string> = {
-  Home: '🏠',
-  Menu: '📋',
-  Game: '🎮',
-  Store: '📍',
-  Profile: '👤',
+const TAB_ICONS: Record<string, keyof typeof Feather.glyphMap> = {
+  Home: 'home',
+  Menu: 'book-open',
+  Game: 'gift',
+  Store: 'map-pin',
+  Profile: 'user',
 };
 
 export default function AppNavigator() {
@@ -70,16 +71,19 @@ export default function AppNavigator() {
             paddingTop: 8,
             height: Platform.OS === 'ios' ? 88 : 64,
           },
-          tabBarActiveTintColor: Colors.accent,
+          tabBarActiveTintColor: Colors.tabActive,
           tabBarInactiveTintColor: Colors.tabInactive,
           tabBarLabelStyle: {
             fontSize: 11,
-            fontWeight: '600',
+            fontWeight: '500' as const,
+            fontFamily: Typography.medium,
           },
           tabBarIcon: ({ focused }) => (
-            <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.6 }}>
-              {TAB_ICONS[route.name]}
-            </Text>
+            <Feather
+              name={TAB_ICONS[route.name]}
+              size={22}
+              color={focused ? Colors.tabActive : Colors.tabInactive}
+            />
           ),
         })}
       >

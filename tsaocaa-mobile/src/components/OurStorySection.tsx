@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/colors';
+import { Colors, Typography } from '../constants/colors';
 
 export default function OurStorySection() {
   return (
@@ -25,10 +25,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '800',
-    color: Colors.primary,
+    fontWeight: '600',
+    color: Colors.textPrimary,
     paddingHorizontal: 16,
     marginBottom: 12,
+    fontFamily: Typography.semiBold,
+    letterSpacing: 0.5,
   },
   card: {
     marginHorizontal: 16,
@@ -38,14 +40,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '600',
     color: Colors.accentLight,
     marginBottom: 10,
+    fontFamily: Typography.semiBold,
   },
   body: {
     fontSize: 14,
     color: Colors.textOnDark,
     lineHeight: 22,
-    opacity: 0.9,
+    opacity: 0.85,
+    fontFamily: Typography.regular,
   },
 });

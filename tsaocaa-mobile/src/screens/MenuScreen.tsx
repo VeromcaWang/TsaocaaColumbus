@@ -4,9 +4,10 @@ import {
   TextInput, FlatList, ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useMenuCategories, useMenuItemsByCategory, useMenuSearch } from '../api/hooks/useMenu';
-import { Colors } from '../constants/colors';
+import { Colors, Typography, Shadows } from '../constants/colors';
 
 export default function MenuScreen() {
   const navigation = useNavigation<any>();
@@ -47,7 +48,7 @@ export default function MenuScreen() {
           contentContainerStyle={styles.categoryContent}
         >
           {catsLoading ? (
-            <ActivityIndicator color={Colors.accent} />
+            <ActivityIndicator color={Colors.primary} />
           ) : (
             categories?.map((cat: any) => (
               <TouchableOpacity
@@ -72,7 +73,7 @@ export default function MenuScreen() {
 
       {/* Items Grid */}
       {isLoading ? (
-        <ActivityIndicator color={Colors.accent} style={{ marginTop: 40 }} />
+        <ActivityIndicator color={Colors.primary} style={{ marginTop: 40 }} />
       ) : (
         <FlatList
           data={displayItems}
@@ -93,12 +94,12 @@ export default function MenuScreen() {
                 />
               ) : (
                 <View style={[styles.itemImage, styles.imagePlaceholder]}>
-                  <Text style={styles.imagePlaceholderEmoji}>🧋</Text>
+                  <Feather name="coffee" size={40} color={Colors.textMuted} />
                 </View>
               )}
               {item.isFeatured && (
                 <View style={styles.featuredBadge}>
-                  <Text style={styles.featuredBadgeText}>⭐ Featured</Text>
+                  <Text style={styles.featuredBadgeText}>Featured</Text>
                 </View>
               )}
               <Text style={styles.itemName} numberOfLines={2}>{item.name}</Text>
@@ -118,38 +119,59 @@ export default function MenuScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  header: { backgroundColor: Colors.primary, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16 },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.textOnDark, marginBottom: 12 },
+  header: {
+    backgroundColor: Colors.background, paddingTop: 60, paddingBottom: 16, paddingHorizontal: 16,
+  },
+  headerTitle: {
+    fontSize: 26, fontWeight: '600', color: Colors.textPrimary, marginBottom: 12,
+    fontFamily: Typography.semiBold, letterSpacing: 1,
+  },
   searchInput: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 10, paddingHorizontal: 14, paddingVertical: 10,
-    color: Colors.textOnDark, fontSize: 15,
+    backgroundColor: Colors.surface,
+    borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10,
+    color: Colors.textPrimary, fontSize: 15,
+    borderWidth: 1, borderColor: Colors.border,
+    fontFamily: Typography.regular,
   },
   categoryScroll: { backgroundColor: Colors.surface, borderBottomWidth: 1, borderBottomColor: Colors.border },
   categoryContent: { paddingHorizontal: 12, paddingVertical: 10, gap: 8, flexDirection: 'row' },
   categoryTab: {
-    paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20,
+    paddingHorizontal: 16, paddingVertical: 8, borderRadius: 12,
     backgroundColor: Colors.background, borderWidth: 1, borderColor: Colors.border,
   },
   categoryTabActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  categoryTabText: { fontSize: 14, fontWeight: '600', color: Colors.textSecondary },
+  categoryTabText: {
+    fontSize: 14, fontWeight: '500', color: Colors.textSecondary,
+    fontFamily: Typography.medium,
+  },
   categoryTabTextActive: { color: Colors.textOnDark },
   grid: { padding: 10 },
   row: { gap: 10 },
   itemCard: {
     flex: 1, backgroundColor: Colors.surface, borderRadius: 12,
     overflow: 'hidden', marginBottom: 10,
-    borderWidth: 1, borderColor: Colors.border,
+    ...Shadows.card,
   },
   itemImage: { width: '100%', aspectRatio: 1 },
   imagePlaceholder: { backgroundColor: Colors.surfaceWarm, justifyContent: 'center', alignItems: 'center' },
-  imagePlaceholderEmoji: { fontSize: 52 },
   featuredBadge: {
     position: 'absolute', top: 8, right: 8,
-    backgroundColor: Colors.accent, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3,
+    backgroundColor: Colors.primary, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3,
   },
-  featuredBadgeText: { fontSize: 11, color: Colors.textOnDark, fontWeight: '700' },
-  itemName: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary, padding: 10, paddingBottom: 4 },
-  itemPrice: { fontSize: 15, fontWeight: '700', color: Colors.accent, paddingHorizontal: 10, paddingBottom: 10 },
-  empty: { textAlign: 'center', color: Colors.textMuted, marginTop: 60, fontSize: 16 },
+  featuredBadgeText: {
+    fontSize: 11, color: Colors.textOnDark, fontWeight: '600',
+    fontFamily: Typography.semiBold,
+  },
+  itemName: {
+    fontSize: 14, fontWeight: '600', color: Colors.textPrimary,
+    fontFamily: Typography.semiBold, padding: 10, paddingBottom: 4,
+  },
+  itemPrice: {
+    fontSize: 15, fontWeight: '600', color: Colors.primary,
+    fontFamily: Typography.semiBold, paddingHorizontal: 10, paddingBottom: 10,
+  },
+  empty: {
+    textAlign: 'center', color: Colors.textMuted, marginTop: 60, fontSize: 16,
+    fontFamily: Typography.regular,
+  },
 });

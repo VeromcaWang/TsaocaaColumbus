@@ -3,11 +3,12 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal,
   ActivityIndicator, Alert, Dimensions, Animated, Platform,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '../store/authStore';
 import { useGameConfig, usePlayGame, useUserCoupons } from '../api/hooks/useGame';
-import { Colors } from '../constants/colors';
+import { Colors, Typography, Shadows } from '../constants/colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const WHEEL_SIZE = SCREEN_WIDTH - 48;
@@ -110,20 +111,24 @@ export default function GameScreen() {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🧋 Lucky Spin</Text>
+        <Text style={styles.headerTitle}>Lucky Spin</Text>
         <Text style={styles.headerSub}>Spin to win coupons!</Text>
       </View>
 
       {!isAuthenticated && (
         <TouchableOpacity style={styles.loginBanner} onPress={() => navigation.navigate('Profile')}>
-          <Text style={styles.loginBannerText}>🔒 Sign in to play Lucky Spin →</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Feather name="lock" size={16} color={Colors.primary} />
+            <Text style={styles.loginBannerText}>Sign in to play Lucky Spin</Text>
+            <Feather name="arrow-right" size={16} color={Colors.primary} />
+          </View>
         </TouchableOpacity>
       )}
 
       {/* Wheel Section */}
       <View style={styles.wheelSection}>
         {configLoading ? (
-          <ActivityIndicator size="large" color={Colors.accent} style={{ height: WHEEL_SIZE }} />
+          <ActivityIndicator size="large" color={Colors.primary} style={{ height: WHEEL_SIZE }} />
         ) : (
           <View style={styles.wheelContainer}>
             <Animated.View
@@ -162,7 +167,7 @@ export default function GameScreen() {
 
             {/* Pointer */}
             <View style={styles.pointer}>
-              <Text style={styles.pointerEmoji}>▼</Text>
+              <Feather name="chevron-down" size={32} color={Colors.primary} />
             </View>
           </View>
         )}
@@ -176,7 +181,7 @@ export default function GameScreen() {
           {isSpinning ? (
             <ActivityIndicator color={Colors.textOnDark} />
           ) : (
-            <Text style={styles.spinBtnText}>🎯 SPIN!</Text>
+            <Text style={styles.spinBtnText}>SPIN</Text>
           )}
         </TouchableOpacity>
 
@@ -188,10 +193,16 @@ export default function GameScreen() {
       {/* Coupon Book */}
       <View style={styles.couponBookSection}>
         <View style={styles.couponBookHeader}>
-          <Text style={styles.couponBookTitle}>
-            📖 My Coupon Book ({activeCoupons.length}/{maxSlots})
-          </Text>
-          <Text style={styles.resetCountdown}>⏰ Resets in {getCountdown()}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Feather name="book" size={18} color={Colors.primary} />
+            <Text style={styles.couponBookTitle}>
+              My Coupon Book ({activeCoupons.length}/{maxSlots})
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Feather name="clock" size={12} color={Colors.textMuted} />
+            <Text style={styles.resetCountdown}>Resets in {getCountdown()}</Text>
+          </View>
         </View>
 
         <View style={styles.couponSlots}>
@@ -218,7 +229,7 @@ export default function GameScreen() {
                 <Text style={styles.couponCode}>{coupon.couponCode}</Text>
                 {coupon.status === 'REDEEMED' ? (
                   <View style={styles.redeemedBadge}>
-                    <Text style={styles.redeemedBadgeText}>✓ Used</Text>
+                    <Text style={styles.redeemedBadgeText}>Used</Text>
                   </View>
                 ) : (
                   <View style={styles.activeBadge}>
@@ -237,11 +248,11 @@ export default function GameScreen() {
           <View style={styles.modalCard}>
             {resultModal?.result === 'WIN' ? (
               <>
-                <Text style={styles.modalEmoji}>🎉</Text>
+                <Text style={styles.modalEmoji}>{resultModal?.segment?.emoji || '🎉'}</Text>
                 <Text style={styles.modalTitle}>YOU WON!</Text>
                 <Text style={styles.modalCouponName}>{resultModal?.coupon?.name}</Text>
                 <Text style={styles.modalCouponCode}>{resultModal?.coupon?.code}</Text>
-                <Text style={styles.modalSaved}>Saved to Coupon Book ✅</Text>
+                <Text style={styles.modalSaved}>Saved to Coupon Book</Text>
               </>
             ) : (
               <>
@@ -270,7 +281,7 @@ export default function GameScreen() {
       <Modal visible={!!replaceModal} transparent animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={[styles.modalCard, { maxHeight: '80%' }]}>
-            <Text style={styles.modalEmoji}>🎉</Text>
+            <Text style={styles.modalEmoji}>{replaceModal?.segment?.emoji || '🎉'}</Text>
             <Text style={styles.modalTitle}>YOU WON!</Text>
             <Text style={styles.modalCouponName}>{replaceModal?.newCoupon?.name}</Text>
             <Text style={styles.replaceTitle}>Your Coupon Book is full!</Text>
@@ -301,7 +312,10 @@ export default function GameScreen() {
                     <Text style={styles.replaceRowName}>{rc.name}</Text>
                     <Text style={styles.replaceRowCode}>{rc.code}</Text>
                   </View>
-                  <Text style={styles.replaceBtn}>Replace →</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <Text style={styles.replaceBtn}>Replace</Text>
+                    <Feather name="arrow-right" size={14} color={Colors.primary} />
+                  </View>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -310,7 +324,10 @@ export default function GameScreen() {
               style={styles.discardBtn}
               onPress={() => setReplaceModal(null)}
             >
-              <Text style={styles.discardBtnText}>❌ Discard New Coupon</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Feather name="x" size={16} color={Colors.error} />
+                <Text style={styles.discardBtnText}>Discard New Coupon</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -322,83 +339,181 @@ export default function GameScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.primary },
-  header: { paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, alignItems: 'center' },
-  headerTitle: { fontSize: 26, fontWeight: '800', color: Colors.accentLight },
-  headerSub: { fontSize: 14, color: Colors.textMuted, marginTop: 4 },
+  container: { flex: 1, backgroundColor: Colors.gameBackground },
+  header: {
+    paddingTop: 60, paddingBottom: 16, paddingHorizontal: 16, alignItems: 'center',
+    backgroundColor: Colors.background,
+  },
+  headerTitle: {
+    fontSize: 26, fontWeight: '600', color: Colors.textPrimary,
+    fontFamily: Typography.semiBold,
+  },
+  headerSub: {
+    fontSize: 14, color: Colors.textSecondary, marginTop: 4,
+    fontFamily: Typography.regular,
+  },
   loginBanner: {
-    backgroundColor: Colors.accent + '20', borderWidth: 1, borderColor: Colors.accent,
+    backgroundColor: Colors.primary + '10', borderWidth: 1, borderColor: Colors.primary,
     margin: 16, borderRadius: 12, padding: 14, alignItems: 'center',
   },
-  loginBannerText: { color: Colors.accentLight, fontWeight: '700', fontSize: 15 },
+  loginBannerText: {
+    color: Colors.primary, fontWeight: '600', fontSize: 15,
+    fontFamily: Typography.semiBold,
+  },
   wheelSection: { alignItems: 'center', paddingHorizontal: 24, paddingBottom: 20 },
-  wheelContainer: { position: 'relative', alignItems: 'center', justifyContent: 'center', marginBottom: 24 },
+  wheelContainer: {
+    position: 'relative', alignItems: 'center', justifyContent: 'center', marginBottom: 24,
+  },
   wheel: {
-    backgroundColor: Colors.primaryLight,
-    borderWidth: 4, borderColor: Colors.accent,
+    backgroundColor: Colors.surfaceWarm,
+    borderWidth: 3, borderColor: Colors.primary,
     alignItems: 'center', justifyContent: 'center',
-    shadowColor: Colors.accent, shadowOpacity: 0.5, shadowRadius: 20, shadowOffset: { width: 0, height: 0 },
-    elevation: 10,
+    shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 12,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
   },
   segment: { position: 'absolute', opacity: 0.8 },
   wheelCenter: {
     width: 80, height: 80, borderRadius: 40,
-    backgroundColor: Colors.primary, borderWidth: 3, borderColor: Colors.accent,
+    backgroundColor: Colors.primary, borderWidth: 3, borderColor: Colors.primaryLight,
     alignItems: 'center', justifyContent: 'center',
   },
-  wheelCenterText: { fontSize: 18, color: Colors.accentLight, fontWeight: '800' },
-  pointer: {
-    position: 'absolute', top: -12, zIndex: 10,
+  wheelCenterText: {
+    fontSize: 18, color: Colors.accentLight, fontWeight: '600',
+    fontFamily: Typography.semiBold,
   },
-  pointerEmoji: { fontSize: 32, color: Colors.accent },
+  pointer: {
+    position: 'absolute', top: -14, zIndex: 10,
+  },
   spinBtn: {
-    backgroundColor: Colors.accent, borderRadius: 30, paddingVertical: 18, paddingHorizontal: 60,
-    shadowColor: Colors.accent, shadowOpacity: 0.6, shadowRadius: 15, shadowOffset: { width: 0, height: 4 },
-    elevation: 8,
+    backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 16, paddingHorizontal: 48,
+    shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   spinBtnDisabled: { opacity: 0.5 },
-  spinBtnText: { fontSize: 22, fontWeight: '900', color: Colors.textOnDark },
-  playsInfo: { fontSize: 13, color: Colors.textMuted, marginTop: 10 },
-  couponBookSection: { backgroundColor: Colors.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20 },
-  couponBookHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  couponBookTitle: { fontSize: 17, fontWeight: '800', color: Colors.primary },
-  resetCountdown: { fontSize: 12, color: Colors.textMuted },
+  spinBtnText: {
+    fontSize: 18, fontWeight: '600', color: Colors.textOnDark,
+    fontFamily: Typography.semiBold, letterSpacing: 2,
+  },
+  playsInfo: {
+    fontSize: 13, color: Colors.textMuted, marginTop: 10,
+    fontFamily: Typography.regular,
+  },
+  couponBookSection: {
+    backgroundColor: Colors.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24,
+    padding: 20, ...Shadows.card,
+  },
+  couponBookHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16,
+  },
+  couponBookTitle: {
+    fontSize: 17, fontWeight: '600', color: Colors.primary,
+    fontFamily: Typography.semiBold,
+  },
+  resetCountdown: {
+    fontSize: 12, color: Colors.textMuted,
+    fontFamily: Typography.regular,
+  },
   couponSlots: { flexDirection: 'row', gap: 10 },
   couponCard: {
-    flex: 1, backgroundColor: Colors.surfaceWarm, borderRadius: 14, padding: 12, alignItems: 'center',
-    borderWidth: 1, borderColor: Colors.border,
+    flex: 1, backgroundColor: Colors.surfaceWarm, borderRadius: 12, padding: 12,
+    alignItems: 'center', ...Shadows.card,
   },
   couponCardRedeemed: { opacity: 0.5 },
   couponEmoji: { fontSize: 28, marginBottom: 6 },
-  couponName: { fontSize: 12, fontWeight: '700', color: Colors.primary, textAlign: 'center', marginBottom: 4 },
-  couponCode: { fontSize: 11, color: Colors.textMuted, fontFamily: 'monospace', marginBottom: 8 },
-  activeBadge: { backgroundColor: Colors.accent, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4 },
-  activeBadgeText: { fontSize: 11, color: Colors.textOnDark, fontWeight: '700' },
-  redeemedBadge: { backgroundColor: Colors.success + '30', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4 },
-  redeemedBadgeText: { fontSize: 11, color: Colors.success, fontWeight: '700' },
+  couponName: {
+    fontSize: 12, fontWeight: '600', color: Colors.primary, textAlign: 'center', marginBottom: 4,
+    fontFamily: Typography.semiBold,
+  },
+  couponCode: {
+    fontSize: 11, color: Colors.textMuted, fontFamily: 'monospace', marginBottom: 8,
+  },
+  activeBadge: {
+    backgroundColor: Colors.primary, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4,
+  },
+  activeBadgeText: {
+    fontSize: 11, color: Colors.textOnDark, fontWeight: '600',
+    fontFamily: Typography.semiBold,
+  },
+  redeemedBadge: {
+    backgroundColor: Colors.success + '30', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4,
+  },
+  redeemedBadgeText: {
+    fontSize: 11, color: Colors.success, fontWeight: '600',
+    fontFamily: Typography.semiBold,
+  },
   emptyCouponSlot: {
-    flex: 1, height: 140, backgroundColor: Colors.background, borderRadius: 14, borderWidth: 2,
+    flex: 1, height: 140, backgroundColor: Colors.background, borderRadius: 12, borderWidth: 2,
     borderColor: Colors.border, borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center',
   },
   emptyCouponText: { fontSize: 32, color: Colors.border },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', padding: 24 },
-  modalCard: { backgroundColor: Colors.surface, borderRadius: 24, padding: 28, alignItems: 'center', width: '100%' },
+  modalOverlay: {
+    flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center',
+    alignItems: 'center', padding: 24,
+  },
+  modalCard: {
+    backgroundColor: Colors.surface, borderRadius: 16, padding: 28,
+    alignItems: 'center', width: '100%', ...Shadows.cardElevated,
+  },
   modalEmoji: { fontSize: 64, marginBottom: 8 },
-  modalTitle: { fontSize: 28, fontWeight: '900', color: Colors.primary, marginBottom: 4 },
-  modalCouponName: { fontSize: 18, fontWeight: '700', color: Colors.accent, marginBottom: 4 },
-  modalCouponCode: { fontSize: 20, fontFamily: 'monospace', color: Colors.textSecondary, fontWeight: '700', marginBottom: 12 },
-  modalSaved: { fontSize: 15, color: Colors.success, fontWeight: '700', marginBottom: 20 },
-  modalSubtitle: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', marginBottom: 20 },
-  modalBtn: { backgroundColor: Colors.accent, borderRadius: 12, paddingVertical: 14, paddingHorizontal: 32, width: '100%', alignItems: 'center' },
-  modalBtnText: { color: Colors.textOnDark, fontWeight: '800', fontSize: 17 },
-  replaceTitle: { fontSize: 16, fontWeight: '700', color: Colors.primary, marginTop: 12, marginBottom: 4 },
-  replaceSubtitle: { fontSize: 13, color: Colors.textMuted, marginBottom: 14, textAlign: 'center' },
-  replaceRow: { flexDirection: 'row', alignItems: 'center', padding: 12, backgroundColor: Colors.background, borderRadius: 12, marginBottom: 8, width: '100%' },
+  modalTitle: {
+    fontSize: 24, fontWeight: '600', color: Colors.primary, marginBottom: 4,
+    fontFamily: Typography.semiBold,
+  },
+  modalCouponName: {
+    fontSize: 18, fontWeight: '600', color: Colors.primary, marginBottom: 4,
+    fontFamily: Typography.semiBold,
+  },
+  modalCouponCode: {
+    fontSize: 20, fontFamily: 'monospace', color: Colors.textSecondary,
+    fontWeight: '600', marginBottom: 12,
+  },
+  modalSaved: {
+    fontSize: 15, color: Colors.success, fontWeight: '600', marginBottom: 20,
+    fontFamily: Typography.semiBold,
+  },
+  modalSubtitle: {
+    fontSize: 15, color: Colors.textSecondary, textAlign: 'center', marginBottom: 20,
+    fontFamily: Typography.regular,
+  },
+  modalBtn: {
+    backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 14,
+    paddingHorizontal: 32, width: '100%', alignItems: 'center',
+  },
+  modalBtnText: {
+    color: Colors.textOnDark, fontWeight: '600', fontSize: 17,
+    fontFamily: Typography.semiBold,
+  },
+  replaceTitle: {
+    fontSize: 16, fontWeight: '600', color: Colors.primary, marginTop: 12, marginBottom: 4,
+    fontFamily: Typography.semiBold,
+  },
+  replaceSubtitle: {
+    fontSize: 13, color: Colors.textMuted, marginBottom: 14, textAlign: 'center',
+    fontFamily: Typography.regular,
+  },
+  replaceRow: {
+    flexDirection: 'row', alignItems: 'center', padding: 12,
+    backgroundColor: Colors.background, borderRadius: 12, marginBottom: 8, width: '100%',
+  },
   replaceRowEmoji: { fontSize: 28, marginRight: 12 },
   replaceRowInfo: { flex: 1 },
-  replaceRowName: { fontSize: 14, fontWeight: '700', color: Colors.primary },
-  replaceRowCode: { fontSize: 12, color: Colors.textMuted },
-  replaceBtn: { fontSize: 14, color: Colors.accent, fontWeight: '700' },
+  replaceRowName: {
+    fontSize: 14, fontWeight: '600', color: Colors.primary,
+    fontFamily: Typography.semiBold,
+  },
+  replaceRowCode: {
+    fontSize: 12, color: Colors.textMuted,
+    fontFamily: Typography.regular,
+  },
+  replaceBtn: {
+    fontSize: 14, color: Colors.primary, fontWeight: '600',
+    fontFamily: Typography.semiBold,
+  },
   discardBtn: { marginTop: 12, padding: 14, alignItems: 'center', width: '100%' },
-  discardBtnText: { fontSize: 15, color: Colors.error, fontWeight: '600' },
+  discardBtnText: {
+    fontSize: 15, color: Colors.error, fontWeight: '600',
+    fontFamily: Typography.semiBold,
+  },
 });

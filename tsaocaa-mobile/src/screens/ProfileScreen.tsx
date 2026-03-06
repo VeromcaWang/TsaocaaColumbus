@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Alert,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../api/client';
 import { useAuthStore } from '../store/authStore';
-import { Colors } from '../constants/colors';
+import { Colors, Typography, Shadows } from '../constants/colors';
 
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();
@@ -37,7 +38,9 @@ export default function ProfileScreen() {
   if (!isAuthenticated) {
     return (
       <View style={styles.guestContainer}>
-        <Text style={styles.guestEmoji}>👤</Text>
+        <View style={styles.guestAvatarCircle}>
+          <Feather name="user" size={48} color={Colors.textMuted} />
+        </View>
         <Text style={styles.guestTitle}>Sign In</Text>
         <Text style={styles.guestSubtitle}>
           Create an account to play Lucky Spin and save coupons!
@@ -65,9 +68,11 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.profileCard}>
-        <Text style={styles.avatar}>👤</Text>
+        <View style={styles.avatarCircle}>
+          <Feather name="user" size={36} color={Colors.primary} />
+        </View>
         {isLoading ? (
-          <ActivityIndicator color={Colors.accent} />
+          <ActivityIndicator color={Colors.primary} />
         ) : (
           <>
             <Text style={styles.displayName}>{profile?.displayName || 'TsaoCaa Member'}</Text>
@@ -78,15 +83,15 @@ export default function ProfileScreen() {
 
       <View style={styles.menuSection}>
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('GameMain')}>
-          <Text style={styles.menuItemEmoji}>🎮</Text>
+          <Feather name="tag" size={22} color={Colors.primary} style={{ marginRight: 14 }} />
           <Text style={styles.menuItemLabel}>My Coupons</Text>
-          <Text style={styles.menuItemChevron}>›</Text>
+          <Feather name="chevron-right" size={20} color={Colors.textMuted} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-          <Text style={styles.menuItemEmoji}>🚪</Text>
+          <Feather name="log-out" size={22} color={Colors.error} style={{ marginRight: 14 }} />
           <Text style={[styles.menuItemLabel, { color: Colors.error }]}>Log Out</Text>
-          <Text style={styles.menuItemChevron}>›</Text>
+          <Feather name="chevron-right" size={20} color={Colors.textMuted} />
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -95,23 +100,74 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  guestContainer: { flex: 1, backgroundColor: Colors.background, justifyContent: 'center', alignItems: 'center', padding: 32 },
-  guestEmoji: { fontSize: 64, marginBottom: 16 },
-  guestTitle: { fontSize: 28, fontWeight: '800', color: Colors.primary, marginBottom: 8 },
-  guestSubtitle: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 32 },
-  loginBtn: { backgroundColor: Colors.accent, borderRadius: 14, paddingVertical: 16, paddingHorizontal: 40, marginBottom: 12, width: '100%', alignItems: 'center' },
-  loginBtnText: { color: Colors.textOnDark, fontWeight: '800', fontSize: 17 },
-  signupBtn: { backgroundColor: Colors.primary, borderRadius: 14, paddingVertical: 16, paddingHorizontal: 40, width: '100%', alignItems: 'center' },
-  signupBtnText: { color: Colors.textOnDark, fontWeight: '700', fontSize: 17 },
-  header: { backgroundColor: Colors.primary, paddingTop: 56, paddingBottom: 20, paddingHorizontal: 16 },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.textOnDark },
-  profileCard: { margin: 16, backgroundColor: Colors.surface, borderRadius: 16, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
-  avatar: { fontSize: 64, marginBottom: 12 },
-  displayName: { fontSize: 22, fontWeight: '800', color: Colors.primary },
-  email: { fontSize: 15, color: Colors.textMuted, marginTop: 4 },
-  menuSection: { margin: 16, backgroundColor: Colors.surface, borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: Colors.border },
-  menuItem: { flexDirection: 'row', alignItems: 'center', padding: 18, borderBottomWidth: 1, borderBottomColor: Colors.divider },
-  menuItemEmoji: { fontSize: 24, marginRight: 14 },
-  menuItemLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: Colors.textPrimary },
-  menuItemChevron: { fontSize: 22, color: Colors.textMuted },
+  guestContainer: {
+    flex: 1, backgroundColor: Colors.background, justifyContent: 'center',
+    alignItems: 'center', padding: 32,
+  },
+  guestAvatarCircle: {
+    width: 96, height: 96, borderRadius: 48,
+    backgroundColor: Colors.surfaceWarm, alignItems: 'center', justifyContent: 'center',
+    marginBottom: 20,
+  },
+  guestTitle: {
+    fontSize: 28, fontWeight: '600', color: Colors.textPrimary, marginBottom: 8,
+    fontFamily: Typography.semiBold,
+  },
+  guestSubtitle: {
+    fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 32,
+    fontFamily: Typography.regular,
+  },
+  loginBtn: {
+    backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 16,
+    paddingHorizontal: 40, marginBottom: 12, width: '100%', alignItems: 'center',
+  },
+  loginBtnText: {
+    color: Colors.textOnDark, fontWeight: '600', fontSize: 17,
+    fontFamily: Typography.semiBold,
+  },
+  signupBtn: {
+    backgroundColor: 'transparent', borderRadius: 12, paddingVertical: 16,
+    paddingHorizontal: 40, width: '100%', alignItems: 'center',
+    borderWidth: 1, borderColor: Colors.textPrimary,
+  },
+  signupBtnText: {
+    color: Colors.textPrimary, fontWeight: '500', fontSize: 17,
+    fontFamily: Typography.medium,
+  },
+  header: {
+    backgroundColor: Colors.background, paddingTop: 60, paddingBottom: 20, paddingHorizontal: 16,
+  },
+  headerTitle: {
+    fontSize: 26, fontWeight: '600', color: Colors.textPrimary,
+    fontFamily: Typography.semiBold,
+  },
+  profileCard: {
+    margin: 16, backgroundColor: Colors.surface, borderRadius: 16, padding: 24,
+    alignItems: 'center', ...Shadows.card,
+  },
+  avatarCircle: {
+    width: 72, height: 72, borderRadius: 36,
+    backgroundColor: Colors.surfaceWarm, alignItems: 'center', justifyContent: 'center',
+    marginBottom: 12,
+  },
+  displayName: {
+    fontSize: 22, fontWeight: '600', color: Colors.textPrimary,
+    fontFamily: Typography.semiBold,
+  },
+  email: {
+    fontSize: 15, color: Colors.textMuted, marginTop: 4,
+    fontFamily: Typography.regular,
+  },
+  menuSection: {
+    margin: 16, backgroundColor: Colors.surface, borderRadius: 16, overflow: 'hidden',
+    ...Shadows.card,
+  },
+  menuItem: {
+    flexDirection: 'row', alignItems: 'center', padding: 18,
+    borderBottomWidth: 1, borderBottomColor: Colors.divider,
+  },
+  menuItemLabel: {
+    flex: 1, fontSize: 16, fontWeight: '500', color: Colors.textPrimary,
+    fontFamily: Typography.medium,
+  },
 });

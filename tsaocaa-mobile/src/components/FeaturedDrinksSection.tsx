@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Image } from 'expo-image';
-import { Colors } from '../constants/colors';
+import { Feather } from '@expo/vector-icons';
+import { Colors, Typography, Shadows } from '../constants/colors';
 
 interface DrinkItem {
   id: number;
@@ -23,7 +24,7 @@ export default function FeaturedDrinksSection({ items, isLoading, onItemPress }:
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Featured Drinks</Text>
       {isLoading ? (
-        <ActivityIndicator color={Colors.accent} style={{ marginTop: 20 }} />
+        <ActivityIndicator color={Colors.primary} style={{ marginTop: 20 }} />
       ) : (
         <View style={styles.list}>
           {items.map((item) => (
@@ -41,7 +42,7 @@ export default function FeaturedDrinksSection({ items, isLoading, onItemPress }:
                 />
               ) : (
                 <View style={[styles.image, styles.imagePlaceholder]}>
-                  <Text style={styles.imageEmoji}>🧋</Text>
+                  <Feather name="coffee" size={36} color={Colors.textMuted} />
                 </View>
               )}
               <View style={styles.info}>
@@ -79,10 +80,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '800',
-    color: Colors.primary,
+    fontWeight: '600',
+    color: Colors.textPrimary,
     paddingHorizontal: 16,
     marginBottom: 12,
+    fontFamily: Typography.semiBold,
+    letterSpacing: 0.5,
   },
   list: {
     paddingHorizontal: 16,
@@ -93,8 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderRadius: 12,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: Colors.border,
+    ...Shadows.card,
   },
   image: {
     width: 100,
@@ -105,9 +107,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageEmoji: {
-    fontSize: 36,
-  },
   info: {
     flex: 1,
     padding: 12,
@@ -115,9 +114,10 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontWeight: '700',
-    color: Colors.primary,
+    fontWeight: '600',
+    color: Colors.textPrimary,
     marginBottom: 4,
+    fontFamily: Typography.semiBold,
   },
   tagsRow: {
     flexDirection: 'row',
@@ -134,17 +134,20 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 11,
     color: Colors.textSecondary,
-    fontWeight: '600',
+    fontWeight: '500',
+    fontFamily: Typography.medium,
   },
   description: {
     fontSize: 13,
     color: Colors.textMuted,
     lineHeight: 18,
     marginBottom: 4,
+    fontFamily: Typography.regular,
   },
   price: {
     fontSize: 14,
-    fontWeight: '700',
-    color: Colors.accent,
+    fontWeight: '600',
+    color: Colors.primary,
+    fontFamily: Typography.semiBold,
   },
 });
